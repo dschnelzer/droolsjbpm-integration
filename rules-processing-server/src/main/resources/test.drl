@@ -28,5 +28,6 @@ rule "echo" dialect "mvel"
 when
     $m : Message()
 then
+	System.out.println("In ECHO Rule");
     $m.text = "echo:" + $m.text;
 end

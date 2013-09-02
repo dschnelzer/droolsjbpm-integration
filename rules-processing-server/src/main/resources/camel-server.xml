@@ -35,34 +35,23 @@
       <bean id="jbossResolver" class="org.apache.camel.jboss.JBossPackageScanClassResolver"/>
       -->
 
-  <!--
-   !   Define the server end point.
-   !   Copy and paste this element, changing id and the address, to expose services on different urls.
-   !   Different Camel routes can handle different end point paths.
-    --> 
-  <cxf:rsServer id="rsServer"  
-                address="/rest"
-                serviceClass="org.drools.jax.rs.CommandExecutorImpl">
-       <cxf:providers>
-           <bean class="org.drools.jax.rs.CommandMessageBodyReader"/>
-       </cxf:providers>
-  </cxf:rsServer>  
   
-  <cxf:cxfEndpoint id="soapServer"
-            address="/soap"
-             serviceName="ns:CommandExecutor"
-             endpointName="ns:CommandExecutorPort"
-          wsdlURL="soap.wsdl"
-          xmlns:ns="http://soap.jax.drools.org/" >
+  
+    <cxf:cxfEndpoint id="soapApplication"
+            address="/application"
+             serviceName="ns:Application"
+             endpointName="ns:ApplicationPort"          
+          wsdlURL="soap-application.wsdl"                   
+          xmlns:ns="http://app.mcarta.com/" >
     <cxf:properties>
-      <entry key="dataFormat" value="MESSAGE"/>
-      <entry key="defaultOperationName" value="execute"/>
+      <entry key="dataFormat" value="PAYLOAD"/>
+      <entry key="defaultOperationName" value="quote"/>
+      <entry key="schema-validation-enabled" value="true" /> 
     </cxf:properties>
   </cxf:cxfEndpoint>
-
   <!-- Leave this, as it's needed to make Camel "drools" aware -->
   <bean id="droolsPolicy" class="org.drools.camel.component.DroolsPolicy" />  
-    
+  <bean id="soapProcessor" class="org.drools.server.SOAPProcessor"/>
   <camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">    
     <!-- 
      ! Routes incoming messages from end point id="rsServer".
@@ -70,24 +59,12 @@
      ! Copy and paste this element, changing marshallers and the 'to' uri, to target different sessions, as needed.
      !-->
      
-    <route>
-       <from uri="cxfrs://bean://rsServer"/>
-       <policy ref="droolsPolicy">
-         <unmarshal ref="xstream" />
-         <to uri="drools:node1/ksession1" />
-         <marshal ref="xstream" />
-       </policy>
-    </route>    
 
-    <route>
-      <from uri="cxf://bean://soapServer"/>
-      <policy ref="droolsPolicy">
-        <unmarshal ref="xstream" />       
-        <to uri="drools:node1/ksession1" />
-        <marshal ref="xstream" />
-      </policy>
-    </route>
-        
+     <route>
+      <from uri="cxf://bean://soapApplication"/>
+      <log message=">> ACORD ROUTE ${body}"/> 
+	  <to uri="bean:soapProcessor"/>
+    </route>      
   </camelContext>
 
 </beans>

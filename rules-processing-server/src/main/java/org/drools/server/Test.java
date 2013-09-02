@@ -53,6 +53,7 @@ public class Test {
         batch += "   </insert>\n";
         batch += "</batch-execution>\n";
 
+        System.out.println("Batch:" + batch);
 
         Test test = new Test();
         String response = test.execute( batch,

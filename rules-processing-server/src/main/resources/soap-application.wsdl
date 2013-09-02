@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+namespace foo.mcarta.com
+operations: quote/application
+ -->
+<wsdl:definitions name="Application" targetNamespace="http://app.mcarta.com/"
+	xmlns:ns1="http://cxf.apache.org/bindings/xformat" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:tns="http://app.mcarta.com/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<wsdl:types>
+		<xsd:schema attributeFormDefault="unqualified"
+			elementFormDefault="qualified" targetNamespace="http://app.mcarta.com/"
+			xmlns:tns="http://app.mcarta.com/" 
+				xmlns:acord="http://www.ACORD.org/standards/PC_Surety/ACORD1/xml/"
+			xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+			<xsd:import namespace="http://www.ACORD.org/standards/PC_Surety/ACORD1/xml/"
+				schemaLocation="acord-pcs-v1_25_1-ns-nodoc-codes-clean-SvcWrappers.xsd" />
+
+			<xsd:element name="ACORDRq" type="tns:ACORDRq" />
+			<xsd:complexType name="ACORDRq">
+				<xsd:sequence>
+					<xsd:element name="SignonRq" type="acord:SignonRq_Type" />
+					<xsd:element name="InsuranceSvcRq"
+						type="acord:InsuranceSvcRq_Type" />
+					<!--  
+					<xsd:element name="SignonRq" type="acord:SignonRq_Type" />
+					<xsd:element name="SignonRq" type="xsd:string" />
+						<xsd:element name="SignonRq" type="acord:SignonRq_Type" />
+					<xsd:element name="InsuranceSvcRq"
+						type="acord:InsuranceSvcRq_Type" />
+					-->
+				</xsd:sequence>
+			</xsd:complexType>
+
+
+			<xsd:element name="ACORDRs" type="tns:ACORDRs" />
+			<xsd:complexType name="ACORDRs">
+				<xsd:sequence>
+					<xsd:element name="SignonRs" type="acord:SignonRs_Type" />
+					<xsd:element name="InsuranceSvcRs"
+						type="acord:InsuranceSvcRs_Type" />
+					<!--  
+					<xsd:element name="SignonRs" type="acord:SignonRq_Type" />
+					<xsd:element name="InsuranceSvcRs"
+						type="acord:InsuranceSvcRs_Type" />
+					-->
+				</xsd:sequence>
+			</xsd:complexType>
+			
+		</xsd:schema>
+
+
+
+
+
+	</wsdl:types>
+
+
+
+
+
+	<wsdl:message name="quote">
+		<wsdl:part element="tns:ACORDRq" name="parameters">
+		</wsdl:part>
+	</wsdl:message>
+
+	<wsdl:message name="quoteResponse">
+		<wsdl:part element="tns:ACORDRs" name="parameters">
+		</wsdl:part>
+	</wsdl:message>
+
+<!-- 
+	<wsdl:message name="application">
+		<wsdl:part element="tns:ACORD_InsuranceSvcRq" name="parameters">
+		</wsdl:part>
+	</wsdl:message>
+
+	<wsdl:message name="applicationResponse">
+		<wsdl:part element="tns:ACORD_InsuranceSvcRs" name="parameters">
+		</wsdl:part>
+	</wsdl:message>
+ -->	
+	<wsdl:portType name="ApplicationPortType">
+		<wsdl:operation name="quote">
+			<wsdl:input message="tns:quote" name="quote">
+			</wsdl:input>
+			<wsdl:output message="tns:quoteResponse" name="quoteResponse">
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:portType>
+
+	<wsdl:binding name="ApplicationSoapBinding" type="tns:ApplicationPortType">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="quote">
+			<soap:operation soapAction="" style="document" />
+			<wsdl:input name="quote">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="quoteResponse">
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+
+
+
+	<wsdl:service name="Application">
+		<wsdl:port binding="tns:ApplicationSoapBinding" name="ApplicationPort">
+			<soap:address location="/kservice/application"/> 
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>
