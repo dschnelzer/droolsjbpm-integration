@@ -64,6 +64,14 @@
       <from uri="cxf://bean://soapApplication"/>
       <log message=">> ACORD ROUTE ${body}"/> 
 	  <to uri="bean:soapProcessor"/>
+	  <!-- 
+	   <policy ref="droolsPolicy">
+         <unmarshal ref="xstream" />
+         <to uri="drools:node1/ksession1" />
+         <marshal ref="xstream" />
+       </policy>
+	   -->
+	  
     </route>      
   </camelContext>
 
